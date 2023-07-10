@@ -1,0 +1,12 @@
+# IDE settings
+.idea
+.vscode
+
+# Go workspace file
+go.work
+go.sum
+
+# Custom
+/_output
+/tmp
+/vendor
