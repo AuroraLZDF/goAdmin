@@ -6,10 +6,12 @@
 package middleware
 
 import (
+	"github.com/gin-gonic/gin"
+
 	"apis/internal/pkg/core"
 	"apis/internal/pkg/errno"
+	"apis/internal/pkg/known"
 	"apis/pkg/token"
-	"github.com/gin-gonic/gin"
 )
 
 // Authn 是认证中间件，用来从 gin.Context 中提取 token 并验证 token 是否合法，
@@ -17,7 +19,7 @@ import (
 func Authn() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// 解析 JWT Token
-		username, err := token.ParseRequest(c.Request)
+		phone, err := token.ParseRequest(c.Request)
 		if err != nil {
 			core.Error(c, errno.ErrTokenInvalid)
 			c.Abort()
@@ -26,7 +28,7 @@ func Authn() gin.HandlerFunc {
 		}
 
 		// 设置全局变量
-		c.Set("username", username)
+		c.Set(known.XUsernameKey, phone)
 		c.Next()
 	}
 }
