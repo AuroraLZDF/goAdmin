@@ -12,9 +12,11 @@ import (
 	"sync"
 	"time"
 
-	"apis/internal/pkg/errno"
-
 	"github.com/golang-jwt/jwt/v5"
+
+	"apis/internal/pkg/errno"
+	"apis/internal/pkg/known"
+	v1 "apis/internal/pkg/request/apis/v1"
 )
 
 var (
@@ -44,13 +46,13 @@ func Init(opts *Options) {
 func ParseToken(r *http.Request) (*jwt.Token, error) {
 	// 1. 从请求头中取出 tokenString
 	var tokenString string
-	header := r.Header.Get("Authorization")
+	header := r.Header.Get(known.XAuthorization)
 	if len(header) == 0 {
 		return nil, ErrMissingHeader
 	}
 
 	// 从请求头中取出 token
-	if _, err := fmt.Sscanf(header, "Bearer %s", &tokenString); err != nil {
+	if _, err := fmt.Sscanf(header, known.XTokenType+" %s", &tokenString); err != nil {
 		return nil, err
 	}
 
@@ -98,15 +100,24 @@ func ParseRequest(r *http.Request) (string, error) {
 }
 
 // Sign 使用 jwtSecret 签发 token，token 的 claims 中会存放传入的 subject.
-func Sign(tokenId string) (tokenString string, err error) {
+func Sign(tokenId string) (v1.TokenResponse, error) {
+	var expires = time.Now().Add(time.Duration(config.Expire) * time.Hour).Unix()
+
 	// Token 的内容
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		config.TokenId: tokenId,
 		"nbf":          time.Now().Unix(),
 		"iat":          time.Now().Unix(),
-		"exp":          time.Now().Add(time.Duration(config.Expire) * time.Hour).Unix(),
+		"exp":          expires,
 	})
+
 	// 签发 token
-	tokenString, err = token.SignedString([]byte(config.Secret))
-	return
+	tokenString, err := token.SignedString([]byte(config.Secret))
+
+	var response = v1.TokenResponse{
+		AccessToken: tokenString,
+		TokenType:   known.XTokenType,
+		ExpiresIn:   expires,
+	}
+	return response, err
 }
