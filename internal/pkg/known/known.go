@@ -9,5 +9,12 @@ const (
 	// XRequestIDKey 用来定义 Gin 上下文中的键，代表请求的 uuid.
 	XRequestIDKey = "X-Request-ID"
 
-	XUsernameKey = "username"
+	// XUsernameKey 用来定义 Token-ID，代表当前登录用户的唯一ID
+	XUsernameKey = "phone"
+
+	// XAuthorization 用来定义 JWT Token 存储在 Header 中对应的 Key
+	XAuthorization = "Authorization"
+
+	// XTokenType 用来定义 Token type
+	XTokenType = "Bearer"
 )
