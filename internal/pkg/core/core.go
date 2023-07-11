@@ -6,9 +6,11 @@
 package core
 
 import (
-	"apis/internal/pkg/errno"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
+
+	"apis/internal/pkg/errno"
 )
 
 // Response 定义了发生错误时的返回消息.
@@ -19,16 +21,16 @@ type Response struct {
 	// Message 包含了可以直接对外展示的错误信息.
 	Message string `json:"message"`
 
-	// Data 包含了可以直接对外展示的数据信息
-	Data interface{} `json:"data"`
+	// Content 包含了可以直接对外展示的数据信息
+	Content interface{} `json:"content"`
 }
 
 // Success 将正确相应数据写入 HTTP 响应主体
-func Success(c *gin.Context, data gin.H, message string) {
+func Success(c *gin.Context, data any, message string) {
 	c.JSON(http.StatusOK, Response{
 		Code:    "ok",
 		Message: message,
-		Data:    data,
+		Content: data,
 	})
 }
 
