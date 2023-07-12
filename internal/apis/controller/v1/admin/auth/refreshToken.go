@@ -12,6 +12,7 @@ import (
 	"apis/pkg/log"
 )
 
+// RefreshToken 刷新 Token
 func (ctrl *AdminController) RefreshToken(c *gin.Context) {
 	log.C(c).Info("RefreshToken function called")
 

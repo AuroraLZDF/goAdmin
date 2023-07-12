@@ -12,6 +12,7 @@ import (
 	"apis/pkg/log"
 )
 
+// UserInfo 查看账户信息
 func (ctrl *AdminController) UserInfo(c *gin.Context) {
 	log.C(c).Info("user detail info function called")
 

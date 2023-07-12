@@ -18,6 +18,7 @@ import (
 	"apis/pkg/token"
 )
 
+// AdminBiz 定义要实现的接口
 type AdminBiz interface {
 	Login(ctx context.Context, r *v1.LoginRequest) (v1.TokenResponse, error)
 	Logout(ctx context.Context, request *http.Request) error
@@ -30,10 +31,10 @@ type adminBiz struct {
 	ds store.IStore
 }
 
-// 确保 userBiz 实现了 UserBiz 接口.
+// 确保 adminBiz 实现了 AdminBiz 接口.
 var _ AdminBiz = (*adminBiz)(nil)
 
-// New 创建一个实现了 UserBiz 接口的实例.
+// New 创建一个实现了 AdminBiz 接口的实例.
 func New(ds store.IStore) *adminBiz {
 	return &adminBiz{ds: ds}
 }

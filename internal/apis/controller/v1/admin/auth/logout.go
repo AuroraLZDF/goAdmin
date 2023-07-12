@@ -12,6 +12,7 @@ import (
 	"apis/pkg/log"
 )
 
+// Logout 退出登录
 func (ctrl *AdminController) Logout(c *gin.Context) {
 	log.C(c).Info("Logout function called")
 
