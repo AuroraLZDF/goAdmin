@@ -14,6 +14,7 @@ import (
 type AdminStore interface {
 	Create(user *model.Admins) error
 	Get(phone string) (*model.Admins, error)
+	Update(user *model.Admins) error
 }
 
 // UserStore 接口的实现.
@@ -41,4 +42,9 @@ func (u *admins) Get(phone string) (*model.Admins, error) {
 	}
 
 	return &user, nil
+}
+
+// Update 更新账户信息
+func (u *admins) Update(user *model.Admins) error {
+	return u.db.Updates(&user).Error
 }

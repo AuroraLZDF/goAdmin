@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"apis/internal/apis/controller/v1/admin/auth"
+	"apis/internal/apis/controller/v1/admin/profile"
 	"apis/internal/apis/store"
 	"apis/internal/pkg/core"
 	"apis/internal/pkg/errno"
@@ -31,24 +32,32 @@ func installRouters(g *gin.Engine) error {
 	})
 
 	ac := auth.New(store.S)
+	pr := profile.New(store.S)
 
 	// 创建 v1 路由分组
 	v1 := g.Group("/v1")
 	{
 		admin := v1.Group("/admin")
 		{
+			// login 路由
+			admin.POST("/auth/login", ac.Login)
+
+			// 添加登录认证
+			admin.Use(middleware.Authn())
+
+			//创建 auth 路由分组
 			_auth := admin.Group("/auth")
 			{
-				_auth.POST("/login", ac.Login)
-
-				//创建 auth 路由分组
-				user := _auth.Use(middleware.Authn())
-				{
-					user.GET("userInfo", ac.UserInfo)
-					user.POST("refresh", ac.RefreshToken)
-					user.POST("logout", ac.Logout)
-				}
+				_auth.GET("userInfo", ac.UserInfo)
+				_auth.POST("refresh", ac.RefreshToken)
+				_auth.POST("logout", ac.Logout)
 			}
+			// 个人资料
+			_profile := admin.Group("profile")
+			{
+				_profile.POST("save", pr.Save)
+			}
+
 		}
 	}
 

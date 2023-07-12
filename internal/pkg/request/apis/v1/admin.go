@@ -16,3 +16,11 @@ type TokenResponse struct {
 	TokenType   string `json:"token_type"`
 	ExpiresIn   int64  `json:"expires_in"`
 }
+
+type ProfileRequest struct {
+	Uid                  int    `form:"uid" valid:"required,numeric"`
+	Name                 string `form:"name" valid:"required,maxstringlength(10)"`
+	Phone                string `form:"phone" valid:"required,numeric"`
+	Password             string `form:"password" valid:"minstringlength(6)"`
+	PasswordConfirmation string `form:"password_confirmation" valid:"minstringlength(6)"`
+}
