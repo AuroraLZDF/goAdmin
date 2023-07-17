@@ -10,34 +10,34 @@ import (
 	"errors"
 
 	"apis/internal/apis/store"
-	"apis/internal/pkg/model"
+	"apis/internal/pkg/model/common"
 	v1 "apis/internal/pkg/request/apis/v1"
 )
 
 // AreaBiz 定义要实现的接口
 type AreaBiz interface {
-	Lists(ctx context.Context, pid int) (*[]model.Areas, error)
-	Detail(ctx context.Context, id int) (*model.Areas, error)
+	Lists(ctx context.Context, pid int) (*[]common.Areas, error)
+	Detail(ctx context.Context, id int) (*common.Areas, error)
 	CreateOrUpdate(ctx context.Context, r v1.AreaUpdateRequest) (int, error)
 	Enable(ctx context.Context, id int) error
 	Disable(ctx context.Context, id int) error
 }
 
-// ProfileBiz 接口的实现.
+// AreaBiz 接口的实现.
 type areaBiz struct {
 	ds store.IStore
 }
 
-// 确保 profileBiz 实现了 ProfileBiz 接口.
+// 确保 areaBiz 实现了 AreaBiz 接口.
 var _ AreaBiz = (*areaBiz)(nil)
 
-// New 创建一个实现了 ProfileBiz 接口的实例.
+// New 创建一个实现了 AreaBiz 接口的实例.
 func New(ds store.IStore) *areaBiz {
 	return &areaBiz{ds: ds}
 }
 
 // Lists 区域列表
-func (b *areaBiz) Lists(ctx context.Context, pid int) (*[]model.Areas, error) {
+func (b *areaBiz) Lists(ctx context.Context, pid int) (*[]common.Areas, error) {
 	lists, err := b.ds.Areas().Gets(pid)
 	if err != nil {
 		return nil, err
@@ -47,7 +47,7 @@ func (b *areaBiz) Lists(ctx context.Context, pid int) (*[]model.Areas, error) {
 }
 
 // Detail 区域详情
-func (b *areaBiz) Detail(ctx context.Context, id int) (*model.Areas, error) {
+func (b *areaBiz) Detail(ctx context.Context, id int) (*common.Areas, error) {
 	info, err := b.ds.Areas().Get(id)
 	if err != nil {
 		return nil, err

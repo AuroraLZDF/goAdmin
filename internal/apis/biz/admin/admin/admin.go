@@ -12,7 +12,7 @@ import (
 
 	"apis/internal/apis/store"
 	"apis/internal/pkg/errno"
-	"apis/internal/pkg/model"
+	"apis/internal/pkg/model/admin"
 	"apis/internal/pkg/request/apis/v1"
 	"apis/pkg/auth"
 	"apis/pkg/token"
@@ -22,7 +22,7 @@ import (
 type AdminBiz interface {
 	Login(ctx context.Context, r *v1.LoginRequest) (v1.TokenResponse, error)
 	Logout(ctx context.Context, request *http.Request) error
-	Info(ctx context.Context, phone string) (*model.Admins, error)
+	Info(ctx context.Context, phone string) (*admin.Admins, error)
 	RefreshToken(ctx context.Context, request *http.Request, phone string) (v1.TokenResponse, error)
 }
 
@@ -63,7 +63,7 @@ func (b *adminBiz) Login(ctx context.Context, r *v1.LoginRequest) (v1.TokenRespo
 	return response, nil
 }
 
-func (b *adminBiz) Info(ctx context.Context, phone string) (*model.Admins, error) {
+func (b *adminBiz) Info(ctx context.Context, phone string) (*admin.Admins, error) {
 	user, err := b.ds.Admins().Get(phone)
 	if err != nil {
 		return nil, err

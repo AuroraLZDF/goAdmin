@@ -6,15 +6,16 @@
 package store
 
 import (
-	"apis/internal/pkg/model"
 	"gorm.io/gorm"
+
+	"apis/internal/pkg/model/admin"
 )
 
 // AdminStore 定义了 auth 模块在 store 层所实现的方法.
 type AdminStore interface {
-	Create(user *model.Admins) error
-	Get(phone string) (*model.Admins, error)
-	Update(user *model.Admins) error
+	Create(user *admin.Admins) error
+	Get(phone string) (*admin.Admins, error)
+	Update(user *admin.Admins) error
 }
 
 // AdminStore 接口的实现.
@@ -30,13 +31,13 @@ func newAdmins(db *gorm.DB) *admins {
 }
 
 // Create 插入一条 auth 记录.
-func (u *admins) Create(user *model.Admins) error {
+func (u *admins) Create(user *admin.Admins) error {
 	return u.db.Create(&user).Error
 }
 
 // Get 获取一条用户数据
-func (u *admins) Get(phone string) (*model.Admins, error) {
-	var user model.Admins
+func (u *admins) Get(phone string) (*admin.Admins, error) {
+	var user admin.Admins
 	if err := u.db.Where("phone = ?", phone).First(&user).Error; err != nil {
 		return nil, err
 	}
@@ -45,6 +46,6 @@ func (u *admins) Get(phone string) (*model.Admins, error) {
 }
 
 // Update 更新账户信息
-func (u *admins) Update(user *model.Admins) error {
+func (u *admins) Update(user *admin.Admins) error {
 	return u.db.Updates(&user).Error
 }

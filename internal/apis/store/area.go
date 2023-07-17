@@ -9,17 +9,18 @@ import (
 	"gorm.io/gorm"
 
 	"apis/internal/pkg/model"
+	"apis/internal/pkg/model/common"
 	v1 "apis/internal/pkg/request/apis/v1"
 )
 
 // AreaStore 定义了 area 模块在 store 层所实现的方法.
 type AreaStore interface {
-	Gets(pid int) (*[]model.Areas, error)
-	Get(id int) (*model.Areas, error)
+	Gets(pid int) (*[]common.Areas, error)
+	Get(id int) (*common.Areas, error)
 	HasSameArea(pid int, name string, id int) bool
 	CreateOrUpdate(request v1.AreaUpdateRequest) (int, error)
-	Enable(area *model.Areas) error
-	Disable(area *model.Areas) error
+	Enable(area *common.Areas) error
+	Disable(area *common.Areas) error
 }
 
 // AreaStore 接口的实现.
@@ -35,8 +36,8 @@ func newAreas(db *gorm.DB) *areas {
 }
 
 // Gets 获取 指定 pid area 列表
-func (a *areas) Gets(pid int) (*[]model.Areas, error) {
-	var lists []model.Areas
+func (a *areas) Gets(pid int) (*[]common.Areas, error) {
+	var lists []common.Areas
 
 	err := a.db.Where("pid=?", pid).Order("id asc").Find(&lists).Error
 	if err != nil {
@@ -47,8 +48,8 @@ func (a *areas) Gets(pid int) (*[]model.Areas, error) {
 }
 
 // Get 获取 指定 id area 详情
-func (a *areas) Get(id int) (*model.Areas, error) {
-	var info model.Areas
+func (a *areas) Get(id int) (*common.Areas, error) {
+	var info common.Areas
 
 	err := a.db.Where("id=?", id).First(&info).Error
 	if err != nil {
@@ -60,7 +61,7 @@ func (a *areas) Get(id int) (*model.Areas, error) {
 
 // HasSameArea 判断是否存在相同的区域信息
 func (a *areas) HasSameArea(pid int, name string, id int) bool {
-	var info model.Areas
+	var info common.Areas
 
 	res := a.db.Where("pid=?", pid).Where("name=?", name)
 	if id > 0 {
@@ -80,15 +81,9 @@ func (a *areas) HasSameArea(pid int, name string, id int) bool {
 
 // CreateOrUpdate 创建或更新区域信息
 func (a *areas) CreateOrUpdate(r v1.AreaUpdateRequest) (int, error) {
-	var info model.Areas
+	var info common.Areas
 
-	if r.Id <= 0 {
-		if err := a.db.Create(r).Error; err != nil {
-			return 0, err
-		}
-
-		a.db.Last(&info)
-	} else {
+	if r.Id != 0 {
 		if err := a.db.Where("id=?", r.Id).First(&info).Error; err != nil {
 			return 0, err
 		}
@@ -99,13 +94,18 @@ func (a *areas) CreateOrUpdate(r v1.AreaUpdateRequest) (int, error) {
 		if err := a.db.Updates(&info).Error; err != nil {
 			return 0, err
 		}
+	} else {
+		if err := a.db.Create(r).Error; err != nil {
+			return 0, err
+		}
+		a.db.Last(&info)
 	}
 
 	return info.ID, nil
 }
 
 // Enable 启用区域信息
-func (a *areas) Enable(area *model.Areas) error {
+func (a *areas) Enable(area *common.Areas) error {
 	area.Status = model.StatusOn
 	if err := a.db.Save(&area).Error; err != nil {
 		return err
@@ -114,7 +114,7 @@ func (a *areas) Enable(area *model.Areas) error {
 }
 
 // Disable 禁用区域信息
-func (a *areas) Disable(area *model.Areas) error {
+func (a *areas) Disable(area *common.Areas) error {
 	area.Status = model.StatusOff
 	if err := a.db.Save(&area).Error; err != nil {
 		return err

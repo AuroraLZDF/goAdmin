@@ -3,10 +3,12 @@
 // license that can be found in the LICENSE file. The original repo for
 // this file is https://github.com/auroralzdf/apis.
 
-package model
+package admin
+
+import "apis/internal/pkg/model"
 
 type Admins struct {
-	Model
+	model.Model
 	Name          string `gorm:"column:name" json:"name"`        //管理员姓名
 	Avatar        string `gorm:"column:avatar" json:"avatar"`    //管理员头像地址
 	Phone         string `gorm:"column:phone" json:"phone"`      //管理员手机号码、同时也是登录账号
