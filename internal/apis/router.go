@@ -10,6 +10,7 @@ import (
 
 	"apis/internal/apis/controller/v1/admin/auth"
 	"apis/internal/apis/controller/v1/admin/profile"
+	"apis/internal/apis/controller/v1/admin/system/attributes/area"
 	"apis/internal/apis/store"
 	"apis/internal/pkg/core"
 	"apis/internal/pkg/errno"
@@ -33,6 +34,7 @@ func installRouters(g *gin.Engine) error {
 
 	ac := auth.New(store.S)
 	pr := profile.New(store.S)
+	ar := area.New(store.S)
 
 	// 创建 v1 路由分组
 	v1 := g.Group("/v1")
@@ -45,7 +47,7 @@ func installRouters(g *gin.Engine) error {
 			// 添加登录认证
 			admin.Use(middleware.Authn())
 
-			//创建 auth 路由分组
+			// 创建 auth 路由分组
 			_auth := admin.Group("/auth")
 			{
 				_auth.GET("userInfo", ac.UserInfo)
@@ -53,9 +55,34 @@ func installRouters(g *gin.Engine) error {
 				_auth.POST("logout", ac.Logout)
 			}
 			// 个人资料
-			_profile := admin.Group("profile")
+			_profile := admin.Group("/profile")
 			{
 				_profile.POST("save", pr.Save)
+			}
+			// 系统设置
+			system := admin.Group("/system")
+			{
+				// 属性设置
+				attributes := system.Group("/attributes")
+				{
+					//区域配置
+					_area := attributes.Group("/area")
+					{
+						_area.GET("lists", ar.Lists)
+						_area.GET("detail", ar.Detail)
+						_area.POST("update", ar.Update)
+						_area.POST("enable", ar.Enable)
+						_area.POST("disable", ar.Disable)
+					}
+				}
+
+				//分类管理
+				//位置配置
+				//公共配置
+
+				//站点设置
+
+				//菜单管理
 			}
 
 		}

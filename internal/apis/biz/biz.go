@@ -8,6 +8,7 @@ package biz
 import (
 	"apis/internal/apis/biz/admin/admin"
 	"apis/internal/apis/biz/admin/profile"
+	"apis/internal/apis/biz/admin/system/area"
 
 	"apis/internal/apis/store"
 )
@@ -16,6 +17,7 @@ import (
 type IBiz interface {
 	Admins() admin.AdminBiz
 	Profiles() profile.ProfileBiz
+	Areas() area.AreaBiz
 }
 
 // biz 是 IBiz 的一个具体实现.
@@ -39,4 +41,9 @@ func (b *biz) Admins() admin.AdminBiz {
 // Profiles 返回一个实现了 ProfileBiz 接口的实例.
 func (b *biz) Profiles() profile.ProfileBiz {
 	return profile.New(b.ds)
+}
+
+// Areas 返回一个实现了 AreaBiz 接口的实例.
+func (b *biz) Areas() area.AreaBiz {
+	return area.New(b.ds)
 }

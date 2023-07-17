@@ -6,8 +6,9 @@
 package store
 
 import (
-	"gorm.io/gorm"
 	"sync"
+
+	"gorm.io/gorm"
 )
 
 var (
@@ -19,6 +20,7 @@ var (
 // IStore 定义了 Store 层需要实现的方法.
 type IStore interface {
 	Admins() AdminStore
+	Areas() AreaStore
 }
 
 // DataStore 是 IStore 的一个具体实现.
@@ -42,4 +44,9 @@ func NewStore(db *gorm.DB) *DataStore {
 // Admins 返回一个实现了 AdminStore 接口的实例
 func (ds *DataStore) Admins() AdminStore {
 	return newAdmins(ds.db)
+}
+
+// Areas 返回一个实现了 AreaStore 接口的实例
+func (ds *DataStore) Areas() AreaStore {
+	return newAreas(ds.db)
 }
