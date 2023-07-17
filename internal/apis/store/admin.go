@@ -17,7 +17,7 @@ type AdminStore interface {
 	Update(user *model.Admins) error
 }
 
-// UserStore 接口的实现.
+// AdminStore 接口的实现.
 type admins struct {
 	db *gorm.DB
 }

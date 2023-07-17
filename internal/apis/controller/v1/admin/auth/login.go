@@ -6,12 +6,12 @@
 package auth
 
 import (
-	"github.com/gin-gonic/gin"
-
 	"apis/internal/pkg/core"
 	"apis/internal/pkg/errno"
 	"apis/internal/pkg/request/apis/v1"
 	"apis/pkg/log"
+	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 )
 
 // Login 登录 apis 并返回一个 JWT Token.
@@ -22,6 +22,18 @@ func (ctrl *AdminController) Login(c *gin.Context) {
 	if err := c.ShouldBind(&r); err != nil {
 		core.Error(c, errno.ErrBind)
 		return
+	}
+
+	//实例化验证器
+	validate := validator.New()
+
+	if errs := validate.Struct(r); errs != nil {
+		//core.Error(c, errno.ErrInvalidParameter.SetMessage(errs.Error()))
+		//return
+		for _, err := range errs.(validator.ValidationErrors) {
+			core.Error(c, errno.ErrInvalidParameter.SetMessage(err.Error()))
+			return
+		}
 	}
 
 	token, err := ctrl.b.Admins().Login(c, &r)

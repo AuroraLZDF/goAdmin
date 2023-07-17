@@ -6,8 +6,8 @@
 package profile
 
 import (
-	"github.com/asaskevich/govalidator"
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 
 	"apis/internal/pkg/core"
 	"apis/internal/pkg/errno"
@@ -25,9 +25,12 @@ func (ctrl ProfileController) Save(c *gin.Context) {
 		return
 	}
 
-	if _, err := govalidator.ValidateStruct(r); err != nil {
-		core.Error(c, errno.ErrInvalidParameter.SetMessage(err.Error()))
-		return
+	validate := validator.New()
+	if errs := validate.Struct(r); errs != nil {
+		for _, err := range errs.(validator.ValidationErrors) {
+			core.Error(c, errno.ErrInvalidParameter.SetMessage(err.Error()))
+			return
+		}
 	}
 
 	if err := ctrl.b.Profiles().Save(c, &r); err != nil {

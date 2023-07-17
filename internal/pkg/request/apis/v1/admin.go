@@ -5,22 +5,24 @@
 
 package v1
 
-// LoginRequest 指定了 `POST /login` 接口的请求参数.
+// LoginRequest 指定了 `POST /admin/auth/login` 接口的请求参数.
 type LoginRequest struct {
-	Phone    string `form:"phone" valid:"required,stringlength(11)"`
-	Password string `form:"password" valid:"required,stringlength(6|18)"`
+	Phone    string `form:"phone" validate:"required,len=11"`
+	Password string `form:"password" validate:"required,max=18,min=6"`
 }
 
+// TokenResponse 指定了 `POST /admin/auth/login` 接口的返回值
 type TokenResponse struct {
 	AccessToken string `json:"access_token"`
 	TokenType   string `json:"token_type"`
 	ExpiresIn   int64  `json:"expires_in"`
 }
 
+// ProfileRequest 指定了 `POST /admin/profile/save` 接口的请求参数
 type ProfileRequest struct {
-	Uid                  int    `form:"uid" valid:"required,numeric"`
-	Name                 string `form:"name" valid:"required,maxstringlength(10)"`
-	Phone                string `form:"phone" valid:"required,numeric"`
-	Password             string `form:"password" valid:"minstringlength(6)"`
-	PasswordConfirmation string `form:"password_confirmation" valid:"minstringlength(6)"`
+	Uid                  int    `form:"uid" validate:"required,numeric"`
+	Name                 string `form:"name" validate:"required,max=10"`
+	Phone                string `form:"phone" validate:"required,numeric"`
+	Password             string `form:"password" validate:"min=6"`
+	PasswordConfirmation string `form:"password_confirmation" validate:"min=6"`
 }
