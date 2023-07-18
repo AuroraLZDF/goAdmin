@@ -7,7 +7,6 @@ package store
 
 import (
 	"apis/internal/pkg/model"
-	"fmt"
 	"gorm.io/gorm"
 
 	"apis/internal/pkg/model/common"
@@ -37,8 +36,6 @@ func newCategories(db *gorm.DB) *categories {
 
 func (c *categories) Gets(r v1.PageRequest) (*[]common.Categories, error) {
 	var lists []common.Categories
-
-	fmt.Println(r)
 
 	err := c.db.Limit(r.PageSize).Offset((r.Page - 1) * r.PageSize).Order("id desc").Find(&lists).Error
 	if err != nil {
@@ -75,7 +72,13 @@ func (c *categories) CreateOrUpdate(r v1.CategoryUpdateRequest) error {
 			return err
 		}
 	} else {
-		if err := c.db.Create(r).Error; err != nil {
+		newCategory := common.Categories{
+			Name:        r.Name,
+			Icon:        r.Icon,
+			Cover:       r.Cover,
+			CoverMobile: r.CoverMobile,
+		}
+		if err := c.db.Create(&newCategory).Error; err != nil {
 			return err
 		}
 	}
