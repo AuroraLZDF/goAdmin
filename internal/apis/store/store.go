@@ -22,6 +22,7 @@ type IStore interface {
 	Admins() AdminStore
 	Areas() AreaStore
 	Categories() CategoryStore
+	Places() PlaceStore
 }
 
 // DataStore 是 IStore 的一个具体实现.
@@ -55,4 +56,9 @@ func (ds *DataStore) Areas() AreaStore {
 // Categories 返回一个实现了 CategoryStore 接口的实例
 func (ds *DataStore) Categories() CategoryStore {
 	return newCategories(ds.db)
+}
+
+// Places 返回一个实现了 PlaceStore 接口的实例
+func (ds *DataStore) Places() PlaceStore {
+	return newPlace(ds.db)
 }
