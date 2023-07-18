@@ -7,13 +7,13 @@ package admin
 
 import "apis/internal/pkg/model"
 
-type GeneralConfig struct {
+type GeneralConfigs struct {
 	model.Model
 	Key    string `gorm:"column:key" json:"key"`       //键
 	Status int    `gorm:"column:status" json:"status"` //状态：0=》启用；1=》禁用
 }
 
 // TableName sets the insert table name for this struct type
-func (g *GeneralConfig) TableName() string {
+func (g *GeneralConfigs) TableName() string {
 	return "general_configs"
 }

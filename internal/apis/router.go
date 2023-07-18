@@ -12,6 +12,7 @@ import (
 	"apis/internal/apis/controller/v1/admin/profile"
 	"apis/internal/apis/controller/v1/admin/system/attributes/area"
 	"apis/internal/apis/controller/v1/admin/system/attributes/category"
+	"apis/internal/apis/controller/v1/admin/system/attributes/general"
 	"apis/internal/apis/controller/v1/admin/system/attributes/place"
 	"apis/internal/apis/store"
 	"apis/internal/pkg/core"
@@ -39,6 +40,7 @@ func installRouters(g *gin.Engine) error {
 	ar := area.New(store.S)
 	ca := category.New(store.S)
 	pl := place.New(store.S)
+	ge := general.New(store.S)
 
 	// 创建 v1 路由分组
 	v1 := g.Group("/v1")
@@ -94,7 +96,15 @@ func installRouters(g *gin.Engine) error {
 						_place.GET("detail", pl.Detail)
 						_place.POST("update", pl.Update)
 					}
-					
+					//公共配置
+					_general := attributes.Group("general")
+					{
+						_general.GET("lists", ge.Lists)
+						_general.GET("detail", ge.Detail)
+						_general.POST("save", ge.Save)
+						_general.POST("enable", ge.Enable)
+						_general.POST("disable", ge.Disable)
+					}
 				}
 
 				//站点设置
