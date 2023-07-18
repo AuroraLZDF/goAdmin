@@ -5,10 +5,6 @@
 
 package v1
 
-type PlaceRequest struct {
-	Id int `form:"id" validate:"required,numeric"`
-}
-
 type PlaceUpdateRequest struct {
 	Id   int    `form:"id" validate:"numeric"`
 	Name string `form:"name" validate:"required"`

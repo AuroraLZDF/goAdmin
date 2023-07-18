@@ -58,7 +58,7 @@ func (ctrl *PlaceController) Lists(c *gin.Context) {
 func (ctrl *PlaceController) Detail(c *gin.Context) {
 	log.C(c).Info("system attributes place detail function called")
 
-	var r v1.PlaceRequest
+	var r v1.IdRequest
 	if err := c.ShouldBind(&r); err != nil {
 		core.Error(c, errno.ErrBind)
 		return

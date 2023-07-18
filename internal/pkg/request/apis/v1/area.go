@@ -5,10 +5,6 @@
 
 package v1
 
-type AreaRequest struct {
-	Id int `form:"id" validate:"required,numeric"`
-}
-
 type AreaUpdateRequest struct {
 	Id    int    `form:"id" validate:"numeric"`
 	Name  string `form:"name" validate:"required"`

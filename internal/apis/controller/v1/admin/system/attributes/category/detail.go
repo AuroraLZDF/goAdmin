@@ -18,7 +18,7 @@ import (
 func (ctrl CategoryController) Detail(c *gin.Context) {
 	log.C(c).Info("system attributes category detail function called")
 
-	var r v1.CategoryRequest
+	var r v1.IdRequest
 	if err := c.ShouldBind(&r); err != nil {
 		core.Error(c, errno.ErrBind)
 		return

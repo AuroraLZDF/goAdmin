@@ -19,7 +19,7 @@ import (
 func (ctrl AreaController) Enable(c *gin.Context) {
 	log.C(c).Info("system attributes area enable function called")
 
-	var r v1.AreaRequest
+	var r v1.IdRequest
 	if err := c.ShouldBind(&r); err != nil {
 		core.Error(c, errno.ErrBind)
 		return
