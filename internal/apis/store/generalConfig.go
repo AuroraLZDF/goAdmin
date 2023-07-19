@@ -15,6 +15,7 @@ import (
 
 // GeneralStore 定义了 general 模块在 store 层所实现的方法
 type GeneralStore interface {
+	Count() int
 	Gets(r v1.PageRequest) (*[]admin.GeneralConfigs, error)
 	Get(id int) (*admin.GeneralConfigs, error)
 	CreateOrUpdate(r v1.GeneralUpdateRequest) error
@@ -32,6 +33,14 @@ var _ PlaceStore = (*places)(nil)
 
 func newGeneral(db *gorm.DB) *generals {
 	return &generals{db}
+}
+
+func (c *generals) Count() int {
+	var count int64
+	if err := c.db.Model(&admin.GeneralConfigs{}).Count(&count).Error; err != nil {
+		return 0
+	}
+	return int(count)
 }
 
 func (g *generals) Gets(r v1.PageRequest) (*[]admin.GeneralConfigs, error) {

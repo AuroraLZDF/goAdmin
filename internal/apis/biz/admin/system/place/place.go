@@ -15,6 +15,7 @@ import (
 
 // PlaceBiz 定义要实现的接口
 type PlaceBiz interface {
+	Count(ctx context.Context) int
 	Lists(ctx context.Context, r v1.PageRequest) (*[]admin.Places, error)
 	Detail(ctx context.Context, id int) (*admin.Places, error)
 	CreateOrUpdate(ctx context.Context, r v1.PlaceUpdateRequest) error
@@ -31,6 +32,11 @@ var _ PlaceBiz = (*placeBiz)(nil)
 // New 创建一个实现了 PlaceBiz 接口的实例.
 func New(ds store.IStore) *placeBiz {
 	return &placeBiz{ds: ds}
+}
+
+func (b *placeBiz) Count(ctx context.Context) int {
+	count := b.ds.Places().Count()
+	return count
 }
 
 func (b *placeBiz) Lists(ctx context.Context, r v1.PageRequest) (*[]admin.Places, error) {

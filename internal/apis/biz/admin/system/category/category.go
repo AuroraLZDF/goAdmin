@@ -15,6 +15,7 @@ import (
 
 // CategoryBiz 定义要实现的接口
 type CategoryBiz interface {
+	Count(ctx context.Context) int
 	Lists(ctx context.Context, r v1.PageRequest) (*[]common.Categories, error)
 	Detail(ctx context.Context, id int) (*common.Categories, error)
 	CreateOrUpdate(ctx context.Context, r v1.CategoryUpdateRequest) error
@@ -33,6 +34,11 @@ var _ CategoryBiz = (*categoryBiz)(nil)
 // New 创建一个实现了 CategoryBiz 接口的实例.
 func New(ds store.IStore) *categoryBiz {
 	return &categoryBiz{ds: ds}
+}
+
+func (b *categoryBiz) Count(ctx context.Context) int {
+	count := b.ds.Categories().Count()
+	return count
 }
 
 func (b *categoryBiz) Lists(ctx context.Context, r v1.PageRequest) (*[]common.Categories, error) {

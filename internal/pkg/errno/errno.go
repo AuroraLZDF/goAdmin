@@ -10,7 +10,7 @@ import "fmt"
 // Errno 定义了 apis 使用的错误类型.
 type Errno struct {
 	HTTP    int
-	Code    string
+	Code    int
 	Message string
 }
 
@@ -26,7 +26,7 @@ func (err *Errno) SetMessage(format string, args ...interface{}) *Errno {
 }
 
 // Decode 尝试从 err 中解析出业务错误码和错误信息.
-func Decode(err error) (int, string, string) {
+func Decode(err error) (int, int, string) {
 	if err == nil {
 		return OK.HTTP, OK.Code, OK.Message
 	}

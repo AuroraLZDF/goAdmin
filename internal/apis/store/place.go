@@ -14,6 +14,7 @@ import (
 
 // PlaceStore 定义了 place 模块在 store 层所实现的方法
 type PlaceStore interface {
+	Count() int
 	Gets(r v1.PageRequest) (*[]admin.Places, error)
 	Get(id int) (*admin.Places, error)
 	CreateOrUpdate(r v1.PlaceUpdateRequest) error
@@ -29,6 +30,14 @@ var _ PlaceStore = (*places)(nil)
 
 func newPlace(db *gorm.DB) *places {
 	return &places{db}
+}
+
+func (c *places) Count() int {
+	var count int64
+	if err := c.db.Model(&admin.Places{}).Count(&count).Error; err != nil {
+		return 0
+	}
+	return int(count)
 }
 
 func (p *places) Gets(r v1.PageRequest) (*[]admin.Places, error) {

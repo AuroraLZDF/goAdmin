@@ -16,7 +16,7 @@ import (
 // Response 定义了发生错误时的返回消息.
 type Response struct {
 	// Code 指定了业务错误码.
-	Code string `json:"code"`
+	Code int `json:"code"`
 
 	// Message 包含了可以直接对外展示的错误信息.
 	Message string `json:"message"`
@@ -28,7 +28,7 @@ type Response struct {
 // Success 将正确相应数据写入 HTTP 响应主体
 func Success(c *gin.Context, data any, message string) {
 	c.JSON(http.StatusOK, Response{
-		Code:    "ok",
+		Code:    0,
 		Message: message,
 		Content: data,
 	})

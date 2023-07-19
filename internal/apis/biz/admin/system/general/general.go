@@ -15,6 +15,7 @@ import (
 
 // GeneralBiz 定义要实现的接口
 type GeneralBiz interface {
+	Count(ctx context.Context) int
 	Lists(ctx context.Context, r v1.PageRequest) (*[]admin.GeneralConfigs, error)
 	Detail(ctx context.Context, id int) (*admin.GeneralConfigs, error)
 	CreateOrUpdate(ctx context.Context, r v1.GeneralUpdateRequest) error
@@ -33,6 +34,11 @@ var _ GeneralBiz = (*generalBiz)(nil)
 // New 创建一个实现了 GeneralBiz 接口的实例.
 func New(ds store.IStore) *generalBiz {
 	return &generalBiz{ds: ds}
+}
+
+func (b *generalBiz) Count(ctx context.Context) int {
+	count := b.ds.Generals().Count()
+	return count
 }
 
 func (b *generalBiz) Lists(ctx context.Context, r v1.PageRequest) (*[]admin.GeneralConfigs, error) {

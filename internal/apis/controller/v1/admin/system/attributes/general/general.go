@@ -44,13 +44,19 @@ func (ctrl *Controller) Lists(c *gin.Context) {
 		}
 	}
 
+	count := ctrl.b.Generals().Count(c)
 	lists, err := ctrl.b.Generals().Lists(c, r)
 	if err != nil {
 		core.Error(c, err)
 		return
 	}
 
-	core.Success(c, lists, "get general config lists success")
+	core.Success(c, gin.H{
+		"current_page": r.Page,
+		"per_page":     r.PageSize,
+		"data":         lists,
+		"total":        count,
+	}, "get general config lists success")
 }
 
 func (ctrl *Controller) Detail(c *gin.Context) {

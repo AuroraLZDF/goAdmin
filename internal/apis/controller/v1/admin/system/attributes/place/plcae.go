@@ -46,13 +46,19 @@ func (ctrl *PlaceController) Lists(c *gin.Context) {
 		}
 	}
 
+	count := ctrl.b.Places().Count(c)
 	lists, err := ctrl.b.Places().Lists(c, r)
 	if err != nil {
 		core.Error(c, err)
 		return
 	}
 
-	core.Success(c, lists, "get place lists success")
+	core.Success(c, gin.H{
+		"current_page": r.Page,
+		"per_page":     r.PageSize,
+		"data":         lists,
+		"total":        count,
+	}, "get place lists success")
 }
 
 func (ctrl *PlaceController) Detail(c *gin.Context) {

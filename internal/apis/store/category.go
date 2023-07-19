@@ -15,6 +15,7 @@ import (
 
 // CategoryStore 定义了 category 模块在 store 层所实现的方法.
 type CategoryStore interface {
+	Count() int
 	Gets(r v1.PageRequest) (*[]common.Categories, error)
 	Get(id int) (*common.Categories, error)
 	CreateOrUpdate(r v1.CategoryUpdateRequest) error
@@ -32,6 +33,14 @@ var _ CategoryStore = (*categories)(nil)
 
 func newCategories(db *gorm.DB) *categories {
 	return &categories{db}
+}
+
+func (c *categories) Count() int {
+	var count int64
+	if err := c.db.Model(&common.Categories{}).Count(&count).Error; err != nil {
+		return 0
+	}
+	return int(count)
 }
 
 func (c *categories) Gets(r v1.PageRequest) (*[]common.Categories, error) {
