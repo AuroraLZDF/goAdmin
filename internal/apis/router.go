@@ -14,6 +14,7 @@ import (
 	"apis/internal/apis/controller/v1/admin/system/attributes/category"
 	"apis/internal/apis/controller/v1/admin/system/attributes/general"
 	"apis/internal/apis/controller/v1/admin/system/attributes/place"
+	"apis/internal/apis/controller/v1/admin/system/config"
 	"apis/internal/apis/store"
 	"apis/internal/pkg/core"
 	"apis/internal/pkg/errno"
@@ -35,18 +36,12 @@ func installRouters(g *gin.Engine) error {
 		core.Success(c, nil, "ok")
 	})
 
-	ac := auth.New(store.S)
-	pr := profile.New(store.S)
-	ar := area.New(store.S)
-	ca := category.New(store.S)
-	pl := place.New(store.S)
-	ge := general.New(store.S)
-
 	// 创建 v1 路由分组
 	v1 := g.Group("/v1")
 	{
 		admin := v1.Group("/admin")
 		{
+			ac := auth.New(store.S)
 			// login 路由
 			admin.POST("/auth/login", ac.Login)
 
@@ -61,6 +56,7 @@ func installRouters(g *gin.Engine) error {
 				_auth.POST("logout", ac.Logout)
 			}
 			// 个人资料
+			pr := profile.New(store.S)
 			_profile := admin.Group("/profile")
 			{
 				_profile.POST("save", pr.Save)
@@ -72,8 +68,9 @@ func installRouters(g *gin.Engine) error {
 				attributes := system.Group("/attributes")
 				{
 					//区域配置
-					_area := attributes.Group("/area")
+					_area := attributes.Group("area")
 					{
+						ar := area.New(store.S)
 						_area.GET("lists", ar.Lists)
 						_area.GET("detail", ar.Detail)
 						_area.POST("update", ar.Update)
@@ -81,8 +78,9 @@ func installRouters(g *gin.Engine) error {
 						_area.POST("disable", ar.Disable)
 					}
 					//分类管理
-					_category := attributes.Group("/category")
+					_category := attributes.Group("category")
 					{
+						ca := category.New(store.S)
 						_category.GET("lists", ca.Lists)
 						_category.GET("detail", ca.Detail)
 						_category.POST("update", ca.Update)
@@ -92,6 +90,7 @@ func installRouters(g *gin.Engine) error {
 					//位置配置
 					_place := attributes.Group("place")
 					{
+						pl := place.New(store.S)
 						_place.GET("lists", pl.Lists)
 						_place.GET("detail", pl.Detail)
 						_place.POST("update", pl.Update)
@@ -99,6 +98,7 @@ func installRouters(g *gin.Engine) error {
 					//公共配置
 					_general := attributes.Group("general")
 					{
+						ge := general.New(store.S)
 						_general.GET("lists", ge.Lists)
 						_general.GET("detail", ge.Detail)
 						_general.POST("save", ge.Save)
@@ -106,9 +106,13 @@ func installRouters(g *gin.Engine) error {
 						_general.POST("disable", ge.Disable)
 					}
 				}
-
 				//站点设置
-
+				_config := system.Group("config")
+				{
+					cf := config.New(store.S)
+					_config.GET("detail", cf.Detail)
+					_config.POST("save", cf.Save)
+				}
 				//菜单管理
 			}
 
