@@ -12,6 +12,7 @@ import (
 	"apis/internal/apis/biz/admin/system/category"
 	"apis/internal/apis/biz/admin/system/config"
 	"apis/internal/apis/biz/admin/system/general"
+	"apis/internal/apis/biz/admin/system/menu"
 	"apis/internal/apis/biz/admin/system/place"
 	"apis/internal/apis/store"
 )
@@ -25,6 +26,7 @@ type IBiz interface {
 	Places() place.PlaceBiz
 	Generals() general.GeneralBiz
 	Configs() config.ConfigBiz
+	Menus() menu.MenuBiz
 }
 
 // biz 是 IBiz 的一个具体实现.
@@ -73,4 +75,9 @@ func (b *biz) Generals() general.GeneralBiz {
 // Configs  返回一个实现了 ConfigBiz 接口的实例.
 func (b *biz) Configs() config.ConfigBiz {
 	return config.New(b.ds)
+}
+
+// Menus 返回一个实现了 MenuBiz 接口的实例.
+func (b *biz) Menus() menu.MenuBiz {
+	return menu.New(b.ds)
 }

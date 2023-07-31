@@ -10,7 +10,7 @@ import (
 )
 
 type Model struct {
-	ID        int       `gorm:"column:id;primary_key" json:"id"`     //ID
+	Id        int       `gorm:"column:id;primary_key" json:"id"`     //ID
 	CreatedAt util.Time `gorm:"column:created_at" json:"created_at"` //创建时间
 	UpdatedAt util.Time `gorm:"column:updated_at" json:"updated_at"` //更新时间
 	//DeletedAt util.Time `gorm:"column:deleted_at" json:"-"`          //删除时间

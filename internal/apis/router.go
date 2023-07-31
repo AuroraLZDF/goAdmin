@@ -15,6 +15,7 @@ import (
 	"apis/internal/apis/controller/v1/admin/system/attributes/general"
 	"apis/internal/apis/controller/v1/admin/system/attributes/place"
 	"apis/internal/apis/controller/v1/admin/system/config"
+	"apis/internal/apis/controller/v1/admin/system/menu"
 	"apis/internal/apis/store"
 	"apis/internal/pkg/core"
 	"apis/internal/pkg/errno"
@@ -114,6 +115,16 @@ func installRouters(g *gin.Engine) error {
 					_config.POST("save", cf.Save)
 				}
 				//菜单管理
+				_menu := system.Group("menu")
+				{
+					mu := menu.New(store.S)
+					_menu.GET("lists", mu.Lists)
+					_menu.GET("detail", mu.Detail)
+					_menu.GET("roleMenu", mu.RoleMenu)
+					_menu.POST("update", mu.Update)
+					_menu.POST("enable", mu.Enable)
+					_menu.POST("disable", mu.Disable)
+				}
 			}
 
 		}

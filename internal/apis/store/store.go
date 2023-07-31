@@ -25,6 +25,8 @@ type IStore interface {
 	Places() PlaceStore
 	Generals() GeneralStore
 	Configs() ConfigStore
+	Menus() MenuStore
+	AdminAccesses() AdminAccessStore
 }
 
 // DataStore 是 IStore 的一个具体实现.
@@ -71,4 +73,12 @@ func (ds *DataStore) Generals() GeneralStore {
 
 func (ds *DataStore) Configs() ConfigStore {
 	return NewConfigs(ds.db)
+}
+
+func (ds *DataStore) Menus() MenuStore {
+	return NewMenus(ds.db)
+}
+
+func (ds *DataStore) AdminAccesses() AdminAccessStore {
+	return NewAdminAccesses(ds.db)
 }
