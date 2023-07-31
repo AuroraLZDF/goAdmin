@@ -39,14 +39,6 @@ func (ctrl Controller) Lists(c *gin.Context) {
 		return
 	}
 
-	for _, area := range *lists {
-		area.Leaf = true
-		if area.Level < 3 {
-			area.HasChildren = true
-			area.Leaf = false
-		}
-	}
-
 	core.Success(c, lists, "get area lists success")
 }
 

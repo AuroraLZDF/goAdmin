@@ -43,6 +43,15 @@ func (b *areaBiz) Lists(ctx context.Context, pid int) (*[]common.Areas, error) {
 		return nil, err
 	}
 
+	for i := 0; i < len(*lists); i++ {
+		area := &(*lists)[i]
+		area.Leaf = true
+		if area.Level < 3 {
+			area.HasChildren = true
+			area.Leaf = false
+		}
+	}
+
 	return lists, nil
 }
 

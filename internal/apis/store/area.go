@@ -72,7 +72,7 @@ func (a *areas) HasSameArea(pid int, name string, id int) bool {
 		return false
 	}
 
-	if id <= 0 || (id > 0 && info.ID != id) {
+	if id <= 0 || (id > 0 && info.Id != id) {
 		return true
 	}
 
@@ -101,7 +101,7 @@ func (a *areas) CreateOrUpdate(r v1.AreaUpdateRequest) (int, error) {
 		a.db.Last(&info)
 	}
 
-	return info.ID, nil
+	return info.Id, nil
 }
 
 // Enable 启用区域信息
