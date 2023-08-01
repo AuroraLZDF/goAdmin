@@ -8,6 +8,7 @@ package apis
 import (
 	"github.com/gin-gonic/gin"
 
+	user "apis/internal/apis/controller/v1/admin/admin"
 	"apis/internal/apis/controller/v1/admin/auth"
 	"apis/internal/apis/controller/v1/admin/profile"
 	"apis/internal/apis/controller/v1/admin/system/attributes/area"
@@ -126,7 +127,20 @@ func installRouters(g *gin.Engine) error {
 					_menu.POST("disable", mu.Disable)
 				}
 			}
-
+			// 管理员及组
+			_admin := admin.Group("admin")
+			{
+				//管理员管理
+				_user := _admin.Group("user")
+				{
+					us := user.New(store.S)
+					_user.GET("lists", us.Lists)
+					_user.GET("detail", us.Detail)
+					_user.POST("update", us.Update)
+					_user.POST("enable", us.Enable)
+					_user.POST("disable", us.Disable)
+				}
+			}
 		}
 	}
 

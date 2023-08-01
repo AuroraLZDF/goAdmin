@@ -24,6 +24,11 @@ type AdminBiz interface {
 	Logout(ctx context.Context, request *http.Request) error
 	Info(ctx context.Context, phone string) (*admin.Admins, error)
 	RefreshToken(ctx context.Context, request *http.Request, phone string) (v1.TokenResponse, error)
+	Lists(ctx context.Context, r v1.PageRequest) (*[]admin.Admins, int, error)
+	Update(ctx context.Context, r v1.AdminUpdateRequest) error
+	Detail(ctx context.Context, id int) (*admin.Admins, error)
+	Enable(ctx context.Context, id int) error
+	Disable(ctx context.Context, id int) error
 }
 
 // AdminBiz 接口的实现.
@@ -93,4 +98,75 @@ func (b *adminBiz) RefreshToken(ctx context.Context, r *http.Request, phone stri
 	}
 
 	return response, nil
+}
+
+func (b *adminBiz) Lists(ctx context.Context, r v1.PageRequest) (*[]admin.Admins, int, error) {
+	lists, total, err := b.ds.Admins().Gets(r)
+	if err != nil {
+		return nil, 0, err
+	}
+	return lists, total, nil
+}
+
+func (b *adminBiz) Detail(ctx context.Context, id int) (*admin.Admins, error) {
+	detail, err := b.ds.Admins().InfoById(id)
+	if err != nil {
+		return nil, err
+	}
+	return detail, nil
+}
+
+func (b *adminBiz) Update(ctx context.Context, r v1.AdminUpdateRequest) error {
+	if r.Id != 0 {
+		user, err := b.ds.Admins().InfoById(r.Id)
+		if err != nil {
+			return err
+		}
+
+		if user.Password == r.Password {
+			r.Password = ""
+		}
+
+		if r.Password != "" {
+			r.Password, _ = auth.Encrypt(r.Password)
+		}
+
+		user.Name = r.Name
+		user.Phone = r.Phone
+		user.Avatar = r.Avatar
+		user.Status = r.Status
+		user.Password = r.Password
+		if err = b.ds.Admins().Update(user); err != nil {
+			return err
+		}
+	} else {
+		if r.Password != "" {
+			return errors.New("密码不能为空")
+		}
+
+		r.Password, _ = auth.Encrypt(r.Password)
+		if err := b.ds.Admins().Create(r); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (b *adminBiz) Enable(ctx context.Context, id int) error {
+	err := b.ds.Admins().Enable(id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (b *adminBiz) Disable(ctx context.Context, id int) error {
+	err := b.ds.Admins().Disable(id)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

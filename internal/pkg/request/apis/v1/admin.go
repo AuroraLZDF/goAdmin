@@ -25,4 +25,14 @@ type ProfileRequest struct {
 	Phone                string `form:"phone" validate:"required,numeric"`
 	Password             string `form:"password" validate:"min=6"`
 	PasswordConfirmation string `form:"password_confirmation" validate:"min=6"`
+	Avatar               string `form:"avatar"`
+}
+
+type AdminUpdateRequest struct {
+	Id       int    `form:"id" validate:"numeric"`
+	Name     string `form:"name" validate:"required,max=10"`
+	Phone    string `form:"phone" validate:"required,numeric"`
+	Password string `form:"password" validate:"min=6"`
+	Avatar   string `form:"avatar"`
+	Status   int    `form:"status" validate:"numeric"`
 }
