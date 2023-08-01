@@ -19,7 +19,7 @@ import (
 // MenuStore 定义了 menu 模块在 store 中的接口
 type MenuStore interface {
 	Count() int
-	Gets(r v1.PageRequest) (*[]admin.Menus, error)
+	Gets(pid int) (*[]admin.Menus, error)
 	Get(id int) (*admin.Menus, error)
 	CreateOrUpdate(r v1.MenuUpdateRequest) error
 	Enable(*admin.Menus) error
@@ -51,10 +51,10 @@ func (m *menus) Count() int {
 	return int(count)
 }
 
-func (m *menus) Gets(r v1.PageRequest) (*[]admin.Menus, error) {
+func (m *menus) Gets(pid int) (*[]admin.Menus, error) {
 	var lists []admin.Menus
 
-	err := m.db.Limit(r.PageSize).Offset((r.Page - 1) * r.PageSize).Order("id desc").Find(&lists).Error
+	err := m.db.Where("pid=?", pid).Order("sort asc").Find(&lists).Error
 	if err != nil {
 		return nil, err
 	}

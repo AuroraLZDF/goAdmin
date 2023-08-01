@@ -13,3 +13,7 @@ type PageRequest struct {
 type IdRequest struct {
 	Id int `form:"id" validate:"required,numeric"`
 }
+
+type PidRequest struct {
+	Pid int `form:"pid" validate:"required,numeric"`
+}

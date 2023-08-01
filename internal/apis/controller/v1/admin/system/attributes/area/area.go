@@ -33,7 +33,21 @@ func New(ds store.IStore) *Controller {
 func (ctrl Controller) Lists(c *gin.Context) {
 	log.C(c).Info("system attributes area lists function called")
 
-	lists, err := ctrl.b.Areas().Lists(c, c.GetInt("pid"))
+	var r v1.PidRequest
+	if err := c.ShouldBind(&r); err != nil {
+		core.Error(c, errno.ErrBind)
+		return
+	}
+
+	validate := validator.New()
+	if errs := validate.Struct(r); errs != nil {
+		for _, err := range errs.(validator.ValidationErrors) {
+			core.Error(c, errno.ErrInvalidParameter.SetMessage(err.Error()))
+			return
+		}
+	}
+
+	lists, err := ctrl.b.Areas().Lists(c, r.Pid)
 	if err != nil {
 		core.Error(c, err)
 		return

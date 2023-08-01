@@ -16,7 +16,7 @@ import (
 // MenuBiz 定义要实现的接口
 type MenuBiz interface {
 	Count(ctx context.Context) int
-	Lists(ctx context.Context, r v1.PageRequest) (*[]admin.Menus, error)
+	Lists(ctx context.Context, pid int) (*[]admin.Menus, error)
 	Detail(ctx context.Context, id int) (*admin.Menus, error)
 	CreateOrUpdate(ctx context.Context, r v1.MenuUpdateRequest) error
 	Enable(ctx context.Context, id int) error
@@ -43,8 +43,8 @@ func (b *menuBiz) Count(ctx context.Context) int {
 	return count
 }
 
-func (b *menuBiz) Lists(ctx context.Context, r v1.PageRequest) (*[]admin.Menus, error) {
-	lists, err := b.ds.Menus().Gets(r)
+func (b *menuBiz) Lists(ctx context.Context, pid int) (*[]admin.Menus, error) {
+	lists, err := b.ds.Menus().Gets(pid)
 	if err != nil {
 		return nil, err
 	}

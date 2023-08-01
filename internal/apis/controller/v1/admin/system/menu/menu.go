@@ -30,7 +30,7 @@ func New(ds store.IStore) *Controller {
 func (ctrl *Controller) Lists(c *gin.Context) {
 	log.C(c).Info("system menu list function called")
 
-	var r v1.PageRequest
+	var r v1.PidRequest
 	if err := c.ShouldBind(&r); err != nil {
 		core.Error(c, errno.ErrBind)
 		return
@@ -44,8 +44,7 @@ func (ctrl *Controller) Lists(c *gin.Context) {
 		}
 	}
 
-	//count := ctrl.b.Menus().Count(c)
-	lists, err := ctrl.b.Menus().Lists(c, r)
+	lists, err := ctrl.b.Menus().Lists(c, r.Pid)
 	if err != nil {
 		core.Error(c, err)
 		return
