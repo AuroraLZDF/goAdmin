@@ -27,6 +27,7 @@ type IStore interface {
 	Configs() ConfigStore
 	Menus() MenuStore
 	AdminAccesses() AdminAccessStore
+	AdminGroups() AdminGroupStore
 }
 
 // DataStore 是 IStore 的一个具体实现.
@@ -81,4 +82,8 @@ func (ds *DataStore) Menus() MenuStore {
 
 func (ds *DataStore) AdminAccesses() AdminAccessStore {
 	return NewAdminAccesses(ds.db)
+}
+
+func (ds *DataStore) AdminGroups() AdminGroupStore {
+	return NewAdminGroups(ds.db)
 }

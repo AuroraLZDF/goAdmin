@@ -6,7 +6,9 @@
 package biz
 
 import (
+	"apis/internal/apis/biz/admin/access"
 	"apis/internal/apis/biz/admin/admin"
+	"apis/internal/apis/biz/admin/group"
 	"apis/internal/apis/biz/admin/profile"
 	"apis/internal/apis/biz/admin/system/area"
 	"apis/internal/apis/biz/admin/system/category"
@@ -27,6 +29,8 @@ type IBiz interface {
 	Generals() general.GeneralBiz
 	Configs() config.ConfigBiz
 	Menus() menu.MenuBiz
+	AdminGroups() group.AdminGroupBiz
+	AdminAccesses() access.AdminAccessBiz
 }
 
 // biz 是 IBiz 的一个具体实现.
@@ -80,4 +84,12 @@ func (b *biz) Configs() config.ConfigBiz {
 // Menus 返回一个实现了 MenuBiz 接口的实例.
 func (b *biz) Menus() menu.MenuBiz {
 	return menu.New(b.ds)
+}
+
+func (b *biz) AdminGroups() group.AdminGroupBiz {
+	return group.New(b.ds)
+}
+
+func (b *biz) AdminAccesses() access.AdminAccessBiz {
+	return access.New(b.ds)
 }

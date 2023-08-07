@@ -36,3 +36,8 @@ type AdminUpdateRequest struct {
 	Avatar   string `form:"avatar"`
 	Status   int    `form:"status" validate:"numeric"`
 }
+
+type AdminAccessUpdateRequest struct {
+	Uid   int   `form:"uid" validate:"required,numeric"`
+	Rules []int `form:"rules" validate:"required"`
+}

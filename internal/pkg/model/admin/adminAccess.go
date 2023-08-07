@@ -6,7 +6,7 @@
 package admin
 
 type AdminAccess struct {
-	UID     int `gorm:"column:uid;primary_key" json:"uid"`           //
+	Uid     int `gorm:"column:uid;primary_key" json:"uid"`           //
 	GroupID int `gorm:"column:group_id;primary_key" json:"group_id"` //
 }
 

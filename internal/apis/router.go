@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	user "apis/internal/apis/controller/v1/admin/admin"
+	"apis/internal/apis/controller/v1/admin/admin/group"
 	"apis/internal/apis/controller/v1/admin/auth"
 	"apis/internal/apis/controller/v1/admin/profile"
 	"apis/internal/apis/controller/v1/admin/system/attributes/area"
@@ -140,6 +141,13 @@ func installRouters(g *gin.Engine) error {
 					_user.POST("enable", us.Enable)
 					_user.POST("disable", us.Disable)
 				}
+			}
+			// 权限组分配
+			_group := _admin.Group("group")
+			{
+				gr := group.New(store.S)
+				_group.GET("index", gr.Index)
+				_group.POST("update", gr.Update)
 			}
 		}
 	}
