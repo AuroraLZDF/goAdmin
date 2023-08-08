@@ -10,6 +10,7 @@ import (
 
 	user "apis/internal/apis/controller/v1/admin/admin"
 	"apis/internal/apis/controller/v1/admin/admin/group"
+	"apis/internal/apis/controller/v1/admin/admin/role"
 	"apis/internal/apis/controller/v1/admin/auth"
 	"apis/internal/apis/controller/v1/admin/profile"
 	"apis/internal/apis/controller/v1/admin/system/attributes/area"
@@ -141,13 +142,24 @@ func installRouters(g *gin.Engine) error {
 					_user.POST("enable", us.Enable)
 					_user.POST("disable", us.Disable)
 				}
-			}
-			// 权限组分配
-			_group := _admin.Group("group")
-			{
-				gr := group.New(store.S)
-				_group.GET("index", gr.Index)
-				_group.POST("update", gr.Update)
+				// 权限组分配
+				_group := _admin.Group("group")
+				{
+					gr := group.New(store.S)
+					_group.GET("index", gr.Index)
+					_group.POST("update", gr.Update)
+				}
+				//权限管理
+				_role := _admin.Group("role")
+				{
+					ro := role.New(store.S)
+					_role.GET("lists", ro.Lists)
+					_role.GET("detail", ro.Detail)
+					_role.GET("rules", ro.Rules)
+					_role.POST("update", ro.Update)
+					_role.POST("enable", ro.Enable)
+					_role.POST("disable", ro.Disable)
+				}
 			}
 		}
 	}

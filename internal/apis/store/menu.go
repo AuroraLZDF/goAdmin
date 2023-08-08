@@ -28,6 +28,7 @@ type MenuStore interface {
 	MenuExists(pid int, title string) (bool, error)
 	GetAdminRoleMenus(uid int) ([]int, error)
 	GetRoleMenus(menuIds []int) ([]map[string]interface{}, error)
+	GetRules() ([]map[string]interface{}, error)
 }
 
 // MenuStore 接口的实现
@@ -157,20 +158,35 @@ func (m *menus) GetAdminRoleMenus(uid int) ([]int, error) {
 }
 
 func (m *menus) GetRoleMenus(menuIds []int) ([]map[string]interface{}, error) {
-	var menus []admin.Menus
+	var data []admin.Menus
 	err := m.db.Model(admin.Menus{}).Where("status = ?", model.StatusOn).
-		Where("id in (?)", menuIds).Order("id asc").Find(&menus).Error
+		Where("id in (?)", menuIds).Order("id asc").Find(&data).Error
 	if err != nil {
 		return nil, err
 	}
 
-	if len(menus) <= 0 {
+	return makeTree(&data)
+}
+
+func (m *menus) GetRules() ([]map[string]interface{}, error) {
+	var data []admin.Menus
+
+	err := m.db.Model(admin.Menus{}).Where("status = ?", model.StatusOn).Order("sort asc").Find(&data).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return makeTree(&data)
+}
+
+// 生成树形结构
+func makeTree(data *[]admin.Menus) ([]map[string]interface{}, error) {
+	if len(*data) <= 0 {
 		return nil, nil // 没有权限菜单，退出
 	}
 
-	// 将 menus 转换为 []map[string]interface{}
 	var result []map[string]interface{}
-	for _, menu := range menus {
+	for _, menu := range *data {
 		menuMap := make(map[string]interface{})
 		menuValue := reflect.ValueOf(menu)
 		menuType := menuValue.Type()

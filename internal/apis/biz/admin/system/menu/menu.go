@@ -23,6 +23,7 @@ type MenuBiz interface {
 	Disable(ctx context.Context, id int) error
 	RoleMenu(ctx context.Context, phone string) ([]map[string]interface{}, error)
 	GetPid(menuId int) ([]int, error)
+	Rules(ctx context.Context) ([]map[string]interface{}, error)
 }
 
 // MenuBiz 接口的实现
@@ -163,4 +164,8 @@ func (b *menuBiz) GetPid(menuId int) ([]int, error) {
 	}
 
 	return pid, nil
+}
+
+func (b *menuBiz) Rules(ctx context.Context) ([]map[string]interface{}, error) {
+	return b.ds.Menus().GetRules()
 }

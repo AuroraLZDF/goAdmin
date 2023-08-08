@@ -41,3 +41,10 @@ type AdminAccessUpdateRequest struct {
 	Uid   int   `form:"uid" validate:"required,numeric"`
 	Rules []int `form:"rules" validate:"required"`
 }
+
+type AdminGroupUpdateRequest struct {
+	Id     int    `json:"id" validate:"numeric"`
+	Title  string `json:"title" validate:"required"`
+	Rules  []int  `json:"rules" validate:"required"`
+	Status int    `json:"status" validate:"numeric"`
+}
