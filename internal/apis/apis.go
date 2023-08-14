@@ -87,7 +87,8 @@ Find more apis information at:
 // run 函数是实际的业务代码入口函数.
 func run() error {
 	// 初始化 store 层（初始化数据库连接）
-	if err := initStore(); err != nil {
+	db, err := initStore()
+	if err != nil {
 		return err
 	}
 
@@ -106,7 +107,7 @@ func run() error {
 	g.Use(middlewares...)
 
 	// 加载路由模块
-	if err := installRouters(g); err != nil {
+	if err := installRouters(g, db); err != nil {
 		return err
 	}
 

@@ -6,6 +6,7 @@
 package apis
 
 import (
+	"gorm.io/gorm"
 	"os"
 	"path/filepath"
 	"strings"
@@ -85,7 +86,7 @@ func logOptions() *log.Options {
 }
 
 // initStore 读取 db 配置，创建 gorm.DB 实例，并初始化 apis store 层.
-func initStore() error {
+func initStore() (*gorm.DB, error) {
 	dbOptions := &db.MySQLOptions{
 		Host:                  viper.GetString("db.host"),
 		Username:              viper.GetString("db.username"),
@@ -99,12 +100,12 @@ func initStore() error {
 
 	ins, err := db.NewMySQL(dbOptions)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	_ = store.NewStore(ins)
 
-	return nil
+	return ins, nil
 }
 
 // jwtOptions 从 viper 中读取日志配置，构建 `*token.Options` 并返回.

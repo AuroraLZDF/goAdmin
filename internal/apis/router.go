@@ -7,9 +7,11 @@ package apis
 
 import (
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 
 	user "apis/internal/apis/controller/v1/admin/admin"
 	"apis/internal/apis/controller/v1/admin/admin/group"
+	uLog "apis/internal/apis/controller/v1/admin/admin/log"
 	"apis/internal/apis/controller/v1/admin/admin/role"
 	"apis/internal/apis/controller/v1/admin/auth"
 	"apis/internal/apis/controller/v1/admin/profile"
@@ -27,7 +29,7 @@ import (
 )
 
 // installRouters 安装 apis 接口路由.
-func installRouters(g *gin.Engine) error {
+func installRouters(g *gin.Engine, db *gorm.DB) error {
 	// 注册 404 Handler.
 	g.NoRoute(func(c *gin.Context) {
 		core.Error(c, errno.ErrPageNotFound)
@@ -149,7 +151,7 @@ func installRouters(g *gin.Engine) error {
 					_group.GET("index", gr.Index)
 					_group.POST("update", gr.Update)
 				}
-				//权限管理
+				// 权限管理
 				_role := _admin.Group("role")
 				{
 					ro := role.New(store.S)
@@ -159,6 +161,12 @@ func installRouters(g *gin.Engine) error {
 					_role.POST("update", ro.Update)
 					_role.POST("enable", ro.Enable)
 					_role.POST("disable", ro.Disable)
+				}
+				// 操作日志
+				_log := _admin.Group("log")
+				{
+					lo := uLog.New(db)
+					_log.GET("lists", lo.Lists)
 				}
 			}
 		}
