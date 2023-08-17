@@ -14,6 +14,7 @@ import (
 	uLog "apis/internal/apis/controller/v1/admin/admin/log"
 	"apis/internal/apis/controller/v1/admin/admin/role"
 	"apis/internal/apis/controller/v1/admin/auth"
+	"apis/internal/apis/controller/v1/admin/authenticate/identity"
 	"apis/internal/apis/controller/v1/admin/profile"
 	"apis/internal/apis/controller/v1/admin/system/attributes/area"
 	"apis/internal/apis/controller/v1/admin/system/attributes/category"
@@ -168,6 +169,16 @@ func installRouters(g *gin.Engine, db *gorm.DB) error {
 					lo := uLog.New(db)
 					_log.GET("lists", lo.Lists)
 				}
+			}
+			// 身份认证
+			_authenticate := admin.Group("auth")
+			{
+				// 实名认证
+				identity := identity.New(db)
+				_authenticate.GET("lists", identity.Lists)
+				_authenticate.GET("detail", identity.Detail)
+				_authenticate.POST("pass", identity.Pass)
+				_authenticate.POST("reject", identity.Reject)
 			}
 		}
 	}

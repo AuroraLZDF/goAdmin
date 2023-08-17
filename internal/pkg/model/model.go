@@ -17,6 +17,7 @@ type Model struct {
 }
 
 const (
-	StatusOn  = 0 // 启用
-	StatusOff = 1 // 禁用
+	StatusOn     = 0 // 启用
+	StatusOff    = 1 // 禁用
+	StatusSecond = 2 // other
 )
